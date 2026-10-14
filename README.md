@@ -23,6 +23,74 @@ npm run runtime:build
 node dist/cli.js run examples/hello.ts --out out
 ```
 
+## Examples
+
+Run any file in `examples/` with `node dist/cli.js run examples/<name>.ts --out out`.
+
+### Recursion
+
+```ts
+function fib(n: number): number {
+  if (n <= 1) {
+    return n;
+  }
+  return fib(n - 1) + fib(n - 2);
+}
+
+function main(): void {
+  let i = 0;
+  while (i < 20) {
+    console.log(fib(i));
+    i = i + 1;
+  }
+}
+```
+
+### Virtual threads
+
+`spawn(fn(args))` runs `fn(args)` on a virtual thread and returns a `Task`. `task.await()` blocks until the task completes.
+
+```ts
+import { Task, spawn } from "tyvm";
+
+function slowCompute(n: number): number {
+  let sum = 0;
+  let i = 0;
+  while (i < n) {
+    sum = sum + i;
+    i = i + 1;
+  }
+  return sum;
+}
+
+function main(): void {
+  const t1: Task<number> = spawn(slowCompute(10000000));
+  const t2: Task<number> = spawn(slowCompute(20000000));
+
+  console.log(t1.await()); // 49999995000000
+  console.log(t2.await()); // 199999990000000
+}
+```
+
+### Calling Java
+
+A `java:` import resolves to a JVM class on the classpath, not a TypeScript module.
+
+```ts
+import { Math } from "java:java.lang.Math";
+import { System } from "java:java.lang.System";
+
+function main(): void {
+  const start: number = System.currentTimeMillis();
+
+  console.log(Math.sqrt(2));           // 1.4142135623730951
+  console.log(Math.pow(Math.PI, 2));   // 9.869604401089358
+
+  const end: number = System.currentTimeMillis();
+  console.log(end - start);
+}
+```
+
 ## Supported language features
 
 - `let`, `const` variable declarations
