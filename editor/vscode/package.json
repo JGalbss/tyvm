@@ -1,0 +1,117 @@
+{
+  "name": "tyvm",
+  "displayName": "tyvm",
+  "description": "TypeScript that compiles to JVM bytecode — virtual threads, durable tasks, zero overhead",
+  "version": "0.2.0",
+  "publisher": "tyvm",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "activationEvents": [
+    "onLanguage:tyvm",
+    "workspaceContains:**/*.tyvm"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "tyvm",
+        "aliases": [
+          "tyvm",
+          "TYVM"
+        ],
+        "extensions": [
+          ".tyvm"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/tyvm-light.svg",
+          "dark": "./icons/tyvm-dark.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tyvm",
+        "scopeName": "source.tyvm",
+        "path": "./syntaxes/tyvm.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "tyvm.compile",
+        "title": "tyvm: Compile Current File"
+      },
+      {
+        "command": "tyvm.run",
+        "title": "tyvm: Run Current File"
+      },
+      {
+        "command": "tyvm.init",
+        "title": "tyvm: Initialize Project"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "tyvm.run",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r",
+        "when": "editorLangId == tyvm"
+      }
+    ],
+    "configuration": {
+      "title": "tyvm",
+      "properties": {
+        "tyvm.javaHome": {
+          "type": "string",
+          "default": "",
+          "description": "Path to Java home directory (auto-detected if empty)"
+        },
+        "tyvm.outputDir": {
+          "type": "string",
+          "default": "out",
+          "description": "Output directory for compiled .class files"
+        },
+        "tyvm.runtimeArgs": {
+          "type": "array",
+          "default": [],
+          "description": "Additional JVM arguments for running compiled files"
+        }
+      }
+    },
+    "taskDefinitions": [
+      {
+        "type": "tyvm",
+        "required": [
+          "task"
+        ],
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "The tyvm task to execute"
+          },
+          "file": {
+            "type": "string",
+            "description": "The file to compile/run"
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=out/extension.js --platform=node --external:vscode --format=cjs --minify",
+    "watch": "esbuild src/extension.ts --bundle --outfile=out/extension.js --platform=node --external:vscode --format=cjs --watch",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.27.4",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "tyvm",
+  "scopeName": "source.tyvm",
+  "fileTypes": ["tyvm"],
+  "patterns": [
+    { "include": "#tyvm-runtime-functions" },
+    { "include": "#tyvm-runtime-types" },
+    { "include": "#tyvm-decorators" },
+    { "include": "#tyvm-module-strings" },
+    { "include": "source.ts" }
+  ],
+  "repository": {
+    "tyvm-module-strings": {
+      "patterns": [
+        {
+          "match": "(['\"])(tyvm)(['\"])",
+          "captures": {
+            "1": { "name": "punctuation.definition.string.begin.ts" },
+            "2": { "name": "support.module.tyvm" },
+            "3": { "name": "punctuation.definition.string.end.ts" }
+          }
+        },
+        {
+          "match": "(['\"])(java:[\\w./]+)(['\"])",
+          "captures": {
+            "1": { "name": "punctuation.definition.string.begin.ts" },
+            "2": { "name": "support.module.java.tyvm" },
+            "3": { "name": "punctuation.definition.string.end.ts" }
+          }
+        }
+      ]
+    },
+    "tyvm-runtime-functions": {
+      "patterns": [
+        {
+          "name": "support.function.tyvm",
+          "match": "\\b(spawn|channel|serve|router|json|text|response|durable|checkpoint|recover|usePostgres|useRedis|workflow)\\b(?=\\s*[(<])"
+        }
+      ]
+    },
+    "tyvm-runtime-types": {
+      "patterns": [
+        {
+          "name": "support.type.tyvm",
+          "match": "\\b(Task|Channel|DurableTask|TaskResult|Server|Router|Handler|HttpRequest|HttpResponse|PostgresClient|RedisClient|Workflow|WorkflowStep)\\b"
+        }
+      ]
+    },
+    "tyvm-decorators": {
+      "patterns": [
+        {
+          "name": "meta.decorator.tyvm",
+          "match": "(@)(Controller|Get|Post|Put|Delete|Patch|Middleware|Route)\\b",
+          "captures": {
+            "1": { "name": "punctuation.decorator.ts" },
+            "2": { "name": "entity.name.function.decorator.tyvm" }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "name": "tyvm",
+  "version": "0.1.0",
+  "description": "TypeScript to JVM compiler — compile TS to Java bytecode with virtual threads",
+  "type": "module",
+  "bin": {
+    "tyvm": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "runtime"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "vitest run test/e2e",
+    "compile": "node dist/cli.js",
+    "runtime:build": "javac -d runtime/classes --release 21 src/runtime/java/tyvm/runtime/*.java && jar cf runtime/tyvm-runtime.jar -C runtime/classes .",
+    "prepublishOnly": "npm run build && npm run runtime:build"
+  },
+  "dependencies": {
+    "typescript": "^5.7.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.3.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "typescript",
+    "jvm",
+    "compiler",
+    "bytecode",
+    "virtual-threads",
+    "java"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tyvm-lang/tyvm"
+  }
+}

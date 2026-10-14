@@ -1,0 +1,13 @@
+node_modules/
+dist/
+runtime/classes/
+*.class
+*.jar
+.DS_Store
+*.tsbuildinfo
+coverage/
+.env
+hs_err_pid*.log
+editor/vscode/out/
+*.vsix
+go/tyvm-go

@@ -1,0 +1,76 @@
+// Claude Agent SDK — using the Java Claude Agent SDK from tyvm
+//
+// This example shows how to use a third-party Java package installed via:
+//   tyvm install org.springaicommunity:claude-code-sdk:1.0.0-SNAPSHOT
+//
+// The SDK wraps Claude Code CLI and gives us a typed API for AI agents.
+
+import { spawn, channel } from "tyvm";
+import { Query } from "java:org.springaicommunity.claude.agent.sdk.Query";
+import { System } from "java:java.lang.System";
+
+// Simple one-shot query — ask Claude a question and get a string back
+function askClaude(prompt: string): string {
+  return Query.text(prompt);
+}
+
+// Check if Claude CLI is available
+function checkSetup(): boolean {
+  const installed = Query.isCliInstalled();
+  if (!installed) {
+    console.log("Claude CLI not found. Install it with: npm install -g @anthropic-ai/claude-code");
+  }
+  return installed;
+}
+
+// Run multiple queries concurrently using virtual threads
+function concurrentQueries(): void {
+  const questions = [
+    "What is the capital of France? Reply in one word.",
+    "What is 42 * 17? Reply with just the number.",
+    "Name one planet in our solar system. Reply in one word.",
+  ];
+
+  console.log("Spawning " + questions.length + " concurrent Claude queries...");
+  const t0 = System.currentTimeMillis();
+
+  // Fan out — each query runs on its own virtual thread
+  const ch = channel<string>();
+
+  for (let i = 0; i < questions.length; i++) {
+    const question = questions[i];
+    spawn(sendQuery(ch, question, i));
+  }
+
+  // Collect results
+  for (let i = 0; i < questions.length; i++) {
+    const result = ch.receive();
+    console.log("  " + result);
+  }
+
+  const elapsed = System.currentTimeMillis() - t0;
+  console.log("All queries completed in " + elapsed + "ms");
+}
+
+function sendQuery(ch: Channel<string>, question: string, idx: number): void {
+  const answer = Query.text(question);
+  ch.send("[" + idx + "] " + answer);
+}
+
+// Main
+function main(): void {
+  console.log("=== Claude Agent SDK Demo ===");
+
+  if (!checkSetup()) return;
+
+  // Simple query
+  console.log("\nAsking Claude a question...");
+  const answer = askClaude("What is TypeScript? Reply in one sentence.");
+  console.log("Claude says: " + answer);
+
+  // Concurrent queries
+  console.log("\nRunning concurrent queries...");
+  concurrentQueries();
+
+  console.log("\nDone!");
+}

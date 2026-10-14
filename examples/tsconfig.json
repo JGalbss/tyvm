@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts", "../types/*.d.ts"],
+  "files": ["../types/tyvm.d.ts", "../types/java.d.ts"],
+  "exclude": ["node_modules", "out"]
+}
