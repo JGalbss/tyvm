@@ -91,6 +91,27 @@ function main(): void {
 }
 ```
 
+## Benchmarks
+
+Wall-clock time, median of 5 runs, including process startup. Compile time is not counted. The sources are in `bench/`. Run them with `bash bench/run.sh`.
+
+| Benchmark | Node | Bun | tyvm | tyvm vs Node |
+|---|---:|---:|---:|---|
+| `collatz` | 9061 ms | 3772 ms | 1202 ms | 7.5x faster |
+| `fib` | 1629 ms | 557 ms | 954 ms | 1.7x faster |
+| `sieve` | 7483 ms | 8213 ms | 6756 ms | 1.1x faster |
+| `stringconcat` | 930 ms | 259 ms | 867 ms | 1.1x faster |
+| `sum-loop` | 1169 ms | 472 ms | 1172 ms | same |
+| `nested-loops` | 616 ms | 448 ms | 622 ms | same |
+| `matmul` | 752 ms | 477 ms | 1618 ms | 2.2x slower |
+| `arithmetic` | 1957 ms | 3856 ms | 49668 ms | 25x slower |
+| `calloverhead` | 536 ms | 510 ms | 18461 ms | 34x slower |
+| `branchheavy` | 1665 ms | 1249 ms | 108060 ms | 65x slower |
+| `ackermann` | stack overflow | 1419 ms | 1661 ms | Node fails |
+| `boolchain` | 691 ms | 561 ms | `VerifyError` | tyvm fails |
+
+Measured on an Apple Silicon Mac (18 cores) with Node 24.2, Bun 1.3.11, and OpenJDK 25. Other builds were using the CPU at the same time, so treat small differences as noise. tyvm printed the same result as Node on every benchmark that both runtimes finished.
+
 ## Supported language features
 
 - `let`, `const` variable declarations
